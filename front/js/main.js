@@ -12,11 +12,21 @@ $(document).ready(function(){
         }).done(function() {
         });
     }
+    //Meto funcionalidad para el datetimePicker
+
+
     //Al hacer click en nueva reserva:
     $('#nueva_reserva').click(function(){
         $('#action').val('insert'); //Definimos la acción
         $('#button_action').val('Reservar');//Añadimos texto de Añadir reserva al botón del modal
         $('.modal-title').text('Add Data');
+        $('#datetimePicker').flatpickr({
+            wrap: true,
+            locale: "es",
+            enableTime: true,
+            minTime: "13:00",
+            maxTime: "16:00"
+        });
         $('#apicrudModal').modal('show');
     });
 
@@ -68,6 +78,13 @@ $(document).ready(function(){
     });
 
     $(document).on('click', '.edit', function(){
+        $('#datetimePicker').flatpickr({
+            wrap: true,
+            locale: "es",
+            enableTime: true,
+            minTime: "13:00",
+            maxTime: "16:00"
+        });
         const id = $(this).attr('id');
         const action = 'fetch_single';
         $.ajax({
@@ -77,13 +94,11 @@ $(document).ready(function(){
             dataType:"json",
             success:function(data)
             {
-                const fecha_reserva = new Date(data.fecha).toISOString() ;
-                console.log(fecha_reserva)
                 $('#hidden_id').val(id);
                 $('#nombre').val(data.nombre);
                 $('#apellidos').val(data.apellidos);
                 $('#telefono').val(data.telefono);
-                $('#fecha').val(fecha_reserva.substring(0,fecha_reserva.length-1));
+                $('#fecha').val(data.fecha);
                 $('#comensales').val(data.comensales);
                 $('#comentarios').text(data.comentarios);
                 $('#action').val('update');

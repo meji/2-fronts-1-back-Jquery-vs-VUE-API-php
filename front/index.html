@@ -6,10 +6,24 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Bienvenido al Restaurante de la UOC</title>
+
+    <!-- jquery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+
+   <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Date time picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+
+
+    <!-- custom js / css -->
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+
 </head>
 <body>
 <div class="container">
@@ -55,9 +69,12 @@
                         <input type="tel" name="telefono" id="telefono" class="form-control" placeholder="Teléfono"/>
                     </div>
                     <div class="form-group">
-                        <label>Fecha:
-                            <input type="datetime-local" name="fecha" id="fecha" class="form-control" />
-                        </label>
+                        <div class='input-group date' id='datetimePicker'>
+                            <input type="text" class="form-control" name="fecha" id="fecha" data-input>
+                            <div class="input-group-addon" data-toggle>
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <input type="number" name="comensales" id="comensales" class="form-control" placeholder="Comensales" />
