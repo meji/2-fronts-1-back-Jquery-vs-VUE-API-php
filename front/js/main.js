@@ -17,8 +17,9 @@ $(document).ready(function(){
                     <td>${item.fecha}</td>
                     <td>${item.comensales}</td>
                     <td>${item.comentarios}</td>
-                    <td><button type="button" name="edit" class="btn btn-warning btn-xs edit" id="${item.id}">Edit</button></td>
-                    <td><button type="button" name="delete" class="btn btn-danger btn-xs delete" id="${item.id}">Delete</button></td>
+                    <td><button type="button" name="edit" class="btn btn-warning btn-xs edit" id="${item.id}">Modificar</button></td>
+                    <td><button type="button" name="delete" class="btn btn-danger btn-xs delete" id="${item.id}">Borrar</button></td>
+                    <td><button type="button" name="delete" class="btn btn-xs btn-primary view" id="${item.id}">Ver Detalle</button></td>
                     </tr>`
             })
                 $('tbody').html(bodyTabla); //Pintamos los datos
@@ -26,8 +27,6 @@ $(document).ready(function(){
         }).done(function() {
         });
     }
-    //Meto funcionalidad para el datetimePicker
-
 
     //Al hacer click en nueva reserva:
     $('#nueva_reserva').click(function(){
@@ -40,7 +39,9 @@ $(document).ready(function(){
             locale: "es",
             enableTime: true,
             minTime: "13:00",
-            maxTime: "16:00"
+            maxTime: "16:00",
+            minDate: new Date().fp_incr(1),
+            time_24hr: true
         });
         $('#apicrudModal').modal('show');
     });
@@ -50,11 +51,16 @@ $(document).ready(function(){
     }
     //Borro los mensajes de validación al hacer focus
     $('#res_form input').on('focus', function(){
-        $(this).siblings('.notice').remove()
+        $(this).siblings('.notice').remove();
+    })
+    //También para el datepicker al activarse
+    $('#res_form #datetimePicker').on('mousedown', function(){
+        $(this).siblings('.notice').remove();
     })
 
     $('#res_form').on('submit', function(event){
         event.preventDefault();
+        console.log( `Fecha 24h ${(Math.round(new Date().getTime()) + (24 * 3600000))} Fecha elegida ${Math.round(new Date($('#fecha').val()))}` )
         if($('#nombre').val() == '')
         {
             validate($('#nombre'), "Escribe tu nombre");
@@ -67,15 +73,17 @@ $(document).ready(function(){
         {
             validate($('#telefono'),"Escribe tu teléfono");
         }
-        else if($('#comensales').val() == '')
+        else if($('#fecha').val() == '')
+        {
+            validate($('#datetimePicker'),"Introduce la fecha y la hora")
+        } else if(Math.round(new Date($('#fecha').val())) <= (Math.round((new Date().getTime()) + (24 * 3600000))))
+        {
+            validate($('#datetimePicker'),"La fecha y la hora de reserva tienen que ser 24h. posteriores a la fecha y hora actual")
+        }else if($('#comensales').val() == '')
         {
             validate($('#comensales'),"Introduce los comensales")
         }else if($('#comensales').val() > 10 || $('#comensales').val() <= 0){
             validate($('#comensales'),"Tienes que elegir de 1 a 10 comensales")
-        }
-        else if($('#fecha').val() == '')
-        {
-            validate($('#fecha'),"Introduce la fecha y la hora")
         }
         else
         {
@@ -101,14 +109,16 @@ $(document).ready(function(){
             });
         }
     });
-
+    //Editar reserva
     $(document).on('click', '.edit', function(){
         $('#datetimePicker').flatpickr({
             wrap: true,
             locale: "es",
             enableTime: true,
             minTime: "13:00",
-            maxTime: "16:00"
+            maxTime: "16:00",
+            minDate: new Date().fp_incr(1),
+            time_24hr: true
         });
         const id = $(this).attr('id');
         const action = 'fetch_single';
@@ -133,7 +143,7 @@ $(document).ready(function(){
             }
         })
     });
-
+    //Borrar reserva
     $(document).on('click', '.delete', function(){
         const id = $(this).attr("id");
         const action = 'delete';
@@ -151,5 +161,26 @@ $(document).ready(function(){
             });
         }
     });
+    //Ver detalle
+    $(document).on('click', '.view', function(){
+        const id = $(this).attr("id");
+        const action = 'fetch_single';
+        $.ajax({
+            url:"../actions/action.php",
+            method:"POST",
+            data:{id:id, action:action},
+            dataType:"json",
+            success:function(data)
+            {
+                $('#detail_nombre').text(data.nombre);
+                $('#detail_apellidos').text(data.apellidos);
+                $('#detail_telefono').text(data.telefono);
+                $('#detail_fecha').text(data.fecha);
+                $('#detail_comensales').text(data.comensales);
+                $('#detail_comentarios').text(data.comentarios);
+                $('#detailModal').modal('show');
+            }
+        })
 
+    });
 });

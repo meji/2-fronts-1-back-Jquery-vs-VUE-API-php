@@ -59,6 +59,7 @@
                     <h4 class="modal-title">Add Data</h4>
                 </div>
                 <div class="modal-body">
+                    <p></p>
                     <div class="form-group">
                         <input type="text" name="nombre" id="nombre" class="form-control" placeholder ="nombre"/>
                     </div>
@@ -75,6 +76,7 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </div>
                         </div>
+                        <span class="help-block">La fecha de reserva ha de ser, por lo menos, 24h posterior a la fecha actual</span>
                     </div>
                     <div class="form-group">
                         <input type="number" name="comensales" id="comensales" class="form-control" placeholder="Comensales" max="10"/>
@@ -91,6 +93,28 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="detailModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Detalle de la reserva</h4>
+                </div>
+                <div class="modal-body details">
+                    <ul class="list-group">
+                        <li class="list-group-item">Nombre: <strong id="detail_nombre"></strong></li>
+                        <li class="list-group-item">Apellidos:<strong id="detail_apellidos"></strong></li>
+                        <li class="list-group-item">Teléfono: <strong id="detail_telefono"></strong></li>
+                        <li class="list-group-item">Fecha reserva: <strong id="detail_fecha"></strong></li>
+                        <li class="list-group-item">Comensales: <strong id="detail_comensales"></strong></li>
+                        <li class="list-group-item">Comentarios: <strong id="detail_comentarios"></strong></li>
+                    </ul>
+                </div>
         </div>
     </div>
 </div>
