@@ -6,8 +6,22 @@ $(document).ready(function(){
         $.ajax({
             url:"../actions/fetch.php",
             success:function(data)
-            {
-                $('tbody').html(data); //Pintamos los datos
+            {   let bodyTabla= "";
+
+                JSON.parse(data).map((item) => {
+                bodyTabla = bodyTabla +
+                    `<tr>
+                    <td>${item.nombre}</td>
+                    <td>${item.apellidos}</td>
+                    <td>${item.telefono}</td>
+                    <td>${item.fecha}</td>
+                    <td>${item.comensales}</td>
+                    <td>${item.comentarios}</td>
+                    <td><button type="button" name="edit" class="btn btn-warning btn-xs edit" id="${item.id}">Edit</button></td>
+                    <td><button type="button" name="delete" class="btn btn-danger btn-xs delete" id="${item.id}">Delete</button></td>
+                    </tr>`
+            })
+                $('tbody').html(bodyTabla); //Pintamos los datos
             }
         }).done(function() {
         });
@@ -17,6 +31,7 @@ $(document).ready(function(){
 
     //Al hacer click en nueva reserva:
     $('#nueva_reserva').click(function(){
+        $('#res_form').trigger("reset");
         $('#action').val('insert'); //Definimos la acción
         $('#button_action').val('Reservar');//Añadimos texto de Añadir reserva al botón del modal
         $('.modal-title').text('Nueva reserva');
@@ -72,7 +87,7 @@ $(document).ready(function(){
                 success:function(data)
                 {
                     fetch_data();
-                    $('#res_form')[0].reset();
+                    $('#res_form').trigger("reset");
                     $('#apicrudModal').modal('hide');
                     if(data == 'insert')
                     {
@@ -110,10 +125,10 @@ $(document).ready(function(){
                 $('#telefono').val(data.telefono);
                 $('#fecha').val(data.fecha);
                 $('#comensales').val(data.comensales);
-                $('#comentarios').text(data.comentarios);
+                $('#comentarios').val(data.comentarios);
                 $('#action').val('update');
                 $('#button_action').val('Actualizar');
-                $('.modal-title').text('Edit Data');
+                $('.modal-title').text('Editar Reserva');
                 $('#apicrudModal').modal('show');
             }
         })

@@ -15,34 +15,14 @@ $response = curl_exec($client);
 
 $result = json_decode($response);
 
-$output = '';
 
-if(count($result) > 0)
-{
-	foreach($result as $row)
-	{
-		$output .= '
-		<tr>
-			<td>'.$row->nombre.'</td>
-			<td>'.$row->apellidos.'</td>
-			<td>'.$row->telefono.'</td>
-			<td>'.$row->fecha.'</td>
-			<td>'.$row->comensales.'</td>
-			<td>'.$row->comentarios.'</td>
-			<td><button type="button" name="edit" class="btn btn-warning btn-xs edit" id="'.$row->id.'">Edit</button></td>
-			<td><button type="button" name="delete" class="btn btn-danger btn-xs delete" id="'.$row->id.'">Delete</button></td>
-		</tr>
-		';
-	}
-}
+
+if(count($response) > 0)
+
+$output = $response;
+
 else
-{
-	$output .= '
-	<tr>
-		<td colspan="4" align="center">No Data Found</td>
-	</tr>
-	';
-}
+$output = 'No hay datos';
 
 echo $output;
 
