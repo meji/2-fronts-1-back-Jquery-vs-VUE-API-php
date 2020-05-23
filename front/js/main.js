@@ -41,8 +41,8 @@ $(document).ready(function(){
                     //Si filtramos las próximas reservas en 24h mostramos solo las de 24h
                     //Pintamos las reservas en la tabla
                     reservas.map((item) => {
-                    bodyTabla = bodyTabla +
-                    `<tr>
+                        bodyTabla = bodyTabla +
+                            `<tr>
                         <td>${item.nombre}</td>
                         <td>${item.apellidos}</td>
                         <td>${item.telefono}</td>

@@ -19,11 +19,11 @@ $result = json_decode($response);
 
 if(count($response) > 0)
 
-$output = $response;
+    $output = $response;
 
 else
-$output = 'No hay datos';
+    $output = 'empty';
 
-echo $output;
+echo $response;
 
 ?>
