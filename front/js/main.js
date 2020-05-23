@@ -1,28 +1,61 @@
 $(document).ready(function(){
     //Traemos los datos al cargar la página
     fetch_data();
-    function fetch_data()
+
+    let filterSwitch = false; //inicializamos esta varible que se le pasa al fetch para filtrar solo las próximas 24h.
+    $('.notice24').on('click', function(){
+        filterSwitch = !filterSwitch;
+        fetch_data(filterSwitch);
+    })
+    function fetch_data(filter = false)
     {
         $.ajax({
             url:"../actions/fetch.php",
             success:function(data)
-            {   let bodyTabla= "";
-
-                JSON.parse(data).map((item) => {
-                bodyTabla = bodyTabla +
+            {
+                let reservas = [];
+                //Comprobamos las reservas en las proximas 24h.
+                const reservas24 = JSON.parse(data).filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime()+ (24 * 3600000))));
+                //Si hay reservas en las próximas 24h pintamos el link de reservas en las próximas 24h.
+                if (reservas24.length > 0 && filter === false){
+                    $('.notice24').show().text('Hay reservas las próximas 24 horas. Ver reservas')
+                }else if(reservas24.length > 0 && filter === true){
+                    $('.notice24').show().text('Ver todas las reservas')
+                }
+                //Si estamos viendo todas las reservas:
+                if(filter === false) {
+                    reservas = JSON.parse(data).filter(reserva => Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()))
+                }else if (filter === true){ //Si estamos viendo solo las de 24 horas
+                    reservas = reservas24;
+                }
+                let bodyTabla= ""; //Iniciamos variable para contenido de la tabla
+                //Si no hay reservas futuras lo decimos
+                if (reservas.length === 0){
+                    bodyTabla = bodyTabla + "<tr><td colspan='9'>No hay Reservas futuras</td></tr>"
+                }else {
+                    //Las ordenamos por fecha
+                    reservas.sort(function(a,b){
+                        const dateA=new Date(a.fecha), dateB=new Date(b.fecha)
+                        return dateA-dateB //sort by date ascending
+                    })
+                    //Si filtramos las próximas reservas en 24h mostramos solo las de 24h
+                    //Pintamos las reservas en la tabla
+                    reservas.map((item) => {
+                    bodyTabla = bodyTabla +
                     `<tr>
-                    <td>${item.nombre}</td>
-                    <td>${item.apellidos}</td>
-                    <td>${item.telefono}</td>
-                    <td>${item.fecha}</td>
-                    <td>${item.comensales}</td>
-                    <td>${item.comentarios}</td>
-                    <td><button type="button" name="edit" class="btn btn-warning btn-xs edit" id="${item.id}">Modificar</button></td>
-                    <td><button type="button" name="delete" class="btn btn-danger btn-xs delete" id="${item.id}">Borrar</button></td>
-                    <td><button type="button" name="delete" class="btn btn-xs btn-primary view" id="${item.id}">Ver Detalle</button></td>
+                        <td>${item.nombre}</td>
+                        <td>${item.apellidos}</td>
+                        <td>${item.telefono}</td>
+                        <td>${item.fecha}</td>
+                        <td>${item.comensales}</td>
+                        <td>${item.comentarios}</td>
+                        <td><button type="button" name="edit" class="btn btn-warning btn-xs edit" id="${item.id}">Modificar</button></td>
+                        <td><button type="button" name="delete" class="btn btn-danger btn-xs delete" id="${item.id}">Borrar</button></td>
+                        <td><button type="button" name="delete" class="btn btn-xs btn-primary view" id="${item.id}">Ver Detalle</button></td>
                     </tr>`
-            })
-                $('tbody').html(bodyTabla); //Pintamos los datos
+                    })
+                }
+                $('tbody').html(bodyTabla); //Pintamos las reservas en el cuerpo de la tabla
             }
         }).done(function() {
         });
@@ -47,20 +80,22 @@ $(document).ready(function(){
     });
     //Hago una función para meter el texto de las validaciones
     function validate(target, text){
-        target.parent('.form-group').append(`<p class="notice">${text}</p>`)
+        target.parent('.form-group').addClass('has-error').append(`<p class="notice">${text}</p>`)
     }
     //Borro los mensajes de validación al hacer focus
     $('#res_form input').on('focus', function(){
         $(this).siblings('.notice').remove();
+        $(this).parent('.form-group').removeClass('has-error');
     })
     //También para el datepicker al activarse
     $('#res_form #datetimePicker').on('mousedown', function(){
         $(this).siblings('.notice').remove();
+        $(this).parent('.form-group').removeClass('has-error');
     })
-
+    //Recogemos el submit del form
     $('#res_form').on('submit', function(event){
         event.preventDefault();
-        console.log( `Fecha 24h ${(Math.round(new Date().getTime()) + (24 * 3600000))} Fecha elegida ${Math.round(new Date($('#fecha').val()))}` )
+        //Validamos los campos
         if($('#nombre').val() == '')
         {
             validate($('#nombre'), "Escribe tu nombre");
@@ -171,7 +206,7 @@ $(document).ready(function(){
             data:{id:id, action:action},
             dataType:"json",
             success:function(data)
-            {
+            {   $('#detail_numero').text(id);
                 $('#detail_nombre').text(data.nombre);
                 $('#detail_apellidos').text(data.apellidos);
                 $('#detail_telefono').text(data.telefono);
@@ -181,6 +216,9 @@ $(document).ready(function(){
                 $('#detailModal').modal('show');
             }
         })
-
     });
+    //Comprobamos cada minutos que no hay nuevas reservas y también al hacerse el fetch si hay en las próximas 24h.
+    setTimeout(function(){
+        fetch_data();
+    }, 60000);
 });

@@ -1,2 +1,11 @@
 .form-group.inline input{display: inline-block; margin-left: 10px; vertical-align: middle; width: auto;  }
 p.notice{color: red; font-size: 1rem; }
+button.notice24{
+    display: none;
+    background: #4cae4c;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    margin: 16px auto;
+}
