@@ -207,6 +207,7 @@ $(document).ready(function(){
             dataType:"json",
             success:function(data)
             {   $('#detail_numero').text(id);
+                $('.modal-title').text(`Ver Reserva ${id}`);
                 $('#detail_nombre').text(data.nombre);
                 $('#detail_apellidos').text(data.apellidos);
                 $('#detail_telefono').text(data.telefono);
