@@ -19,7 +19,7 @@ $(document).ready(function(){
     $('#nueva_reserva').click(function(){
         $('#action').val('insert'); //Definimos la acción
         $('#button_action').val('Reservar');//Añadimos texto de Añadir reserva al botón del modal
-        $('.modal-title').text('Add Data');
+        $('.modal-title').text('Nueva reserva');
         $('#datetimePicker').flatpickr({
             wrap: true,
             locale: "es",
@@ -29,28 +29,38 @@ $(document).ready(function(){
         });
         $('#apicrudModal').modal('show');
     });
+    //Hago una función para meter el texto de las validaciones
+    function validate(target, text){
+        target.parent('.form-group').append(`<p class="notice">${text}</p>`)
+    }
+    //Borro los mensajes de validación al hacer focus
+    $('#res_form input').on('focus', function(){
+        $(this).siblings('.notice').remove()
+    })
 
     $('#res_form').on('submit', function(event){
         event.preventDefault();
         if($('#nombre').val() == '')
         {
-            alert("Escribe tu nombre");
+            validate($('#nombre'), "Escribe tu nombre");
         }
         else if($('#apellidos').val() == '')
         {
-            alert("Escribe tus apellidos");
+            validate($('#apellidos'),"Escribe tus apellidos");
         }
         else if($('#telefono').val() == '')
         {
-            alert("Escribe tu teléfono");
+            validate($('#telefono'),"Escribe tu teléfono");
         }
         else if($('#comensales').val() == '')
         {
-            alert("Introduce los comensales");
+            validate($('#comensales'),"Introduce los comensales")
+        }else if($('#comensales').val() > 10 || $('#comensales').val() <= 0){
+            validate($('#comensales'),"Tienes que elegir de 1 a 10 comensales")
         }
         else if($('#fecha').val() == '')
         {
-            alert("Introduce Fecha y Hora");
+            validate($('#fecha'),"Introduce la fecha y la hora")
         }
         else
         {
