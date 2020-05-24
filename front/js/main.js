@@ -10,7 +10,7 @@ $(document).ready(function(){
     function fetch_data(filter = false)
     {
         $.ajax({
-            url:"../actions/fetch.php",
+            url:"../back/actions/fetch.php",
             success:function(data)
             {
                 let reservas = [];
@@ -18,7 +18,7 @@ $(document).ready(function(){
                 const reservas24 = JSON.parse(data).filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime()+ (24 * 3600000))));
                 //Si hay reservas en las próximas 24h pintamos el link de reservas en las próximas 24h.
                 if (reservas24.length > 0 && filter === false){
-                    $('.notice24').show().text('Hay reservas las próximas 24 horas. Ver reservas')
+                    $('.notice24').show().text('Hay reservas las próximas 24 horas. Filtrar')
                 }else if(reservas24.length > 0 && filter === true){
                     $('.notice24').show().text('Ver todas las reservas')
                 }
@@ -46,7 +46,7 @@ $(document).ready(function(){
                         <td>${item.nombre}</td>
                         <td>${item.apellidos}</td>
                         <td>${item.telefono}</td>
-                        <td>${item.fecha}</td>
+                        <td>${flatpickr.formatDate(new Date(item.fecha), "d-m-Y H:i")}</td>
                         <td>${item.comensales}</td>
                         <td>${item.comentarios}</td>
                         <td><button type="button" name="edit" class="btn btn-warning btn-xs edit" id="${item.id}">Modificar</button></td>
@@ -74,7 +74,10 @@ $(document).ready(function(){
             minTime: "13:00",
             maxTime: "16:00",
             minDate: new Date().fp_incr(1),
-            time_24hr: true
+            time_24hr: true,
+            altInput: true,
+            altFormat: "D d-m-Y H:i",
+            dateFormat: "d-m-Y H:i"
         });
         $('#apicrudModal').modal('show');
     });
@@ -124,7 +127,7 @@ $(document).ready(function(){
         {
             const form_data = $(this).serialize();
             $.ajax({
-                url:"../actions/action.php",
+                url:"../back/actions/action.php",
                 method:"POST",
                 data:form_data,
                 success:function(data)
@@ -146,29 +149,31 @@ $(document).ready(function(){
     });
     //Editar reserva
     $(document).on('click', '.edit', function(){
-        $('#datetimePicker').flatpickr({
-            wrap: true,
-            locale: "es",
-            enableTime: true,
-            minTime: "13:00",
-            maxTime: "16:00",
-            minDate: new Date().fp_incr(1),
-            time_24hr: true
-        });
         const id = $(this).attr('id');
         const action = 'fetch_single';
         $.ajax({
-            url:"../actions/action.php",
+            url:"../back/actions/action.php",
             method:"POST",
             data:{id:id, action:action},
             dataType:"json",
             success:function(data)
             {
+                $('#datetimePicker').flatpickr({
+                    wrap: true,
+                    locale: "es",
+                    enableTime: true,
+                    minTime: "13:00",
+                    maxTime: "16:00",
+                    minDate: new Date().fp_incr(1),
+                    time_24hr: true,
+                    dateFormat: "d-m-Y H:i",
+                    defaultDate: flatpickr.formatDate(new Date(data.fecha), "d-m-Y H:i")
+                });
                 $('#hidden_id').val(id);
                 $('#nombre').val(data.nombre);
                 $('#apellidos').val(data.apellidos);
                 $('#telefono').val(data.telefono);
-                $('#fecha').val(data.fecha);
+                $('#fecha').val(flatpickr.formatDate(new Date(data.fecha), "d-m-Y H:i"));
                 $('#comensales').val(data.comensales);
                 $('#comentarios').val(data.comentarios);
                 $('#action').val('update');
@@ -185,7 +190,7 @@ $(document).ready(function(){
         if(confirm("¿Estás seguro de que quieres eliminar esta reserva?"))
         {
             $.ajax({
-                url:"../actions/action.php",
+                url:"../back/actions/action.php",
                 method:"POST",
                 data:{id:id, action:action},
                 success:function(data)
@@ -201,7 +206,7 @@ $(document).ready(function(){
         const id = $(this).attr("id");
         const action = 'fetch_single';
         $.ajax({
-            url:"../actions/action.php",
+            url:"../back/actions/action.php",
             method:"POST",
             data:{id:id, action:action},
             dataType:"json",
@@ -211,7 +216,7 @@ $(document).ready(function(){
                 $('#detail_nombre').text(data.nombre);
                 $('#detail_apellidos').text(data.apellidos);
                 $('#detail_telefono').text(data.telefono);
-                $('#detail_fecha').text(data.fecha);
+                $('#detail_fecha').text(flatpickr.formatDate(new Date(data.fecha), "d-m-Y H:i"));
                 $('#detail_comensales').text(data.comensales);
                 $('#detail_comentarios').text(data.comentarios);
                 $('#detailModal').modal('show');
