@@ -3,6 +3,9 @@
 //action.php
 $prefix = $_SERVER['HTTPS'] ? 'https://' : 'http://';
 $domain = $_SERVER['HTTP_HOST'];
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept' );
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
 if(isset($_POST["action"]))
 {

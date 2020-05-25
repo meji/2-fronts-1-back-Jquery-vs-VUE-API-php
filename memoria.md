@@ -14,7 +14,7 @@ Se han conseguido los objetivos pedidos:
 * Listado de todas las **reservas futuras** , con acción en cada una para:
     * Ver detalle
     * Modificar reserva
-    * Eliminar Reserva
+    * Eliminar ReservaItem
 * Botón de añadir reserva
 * Si hay reservas en las próximas 24 horas sale una nota encima de las reservas y podemos filtrar y ver esas reservas.
 * Crear o modifcar reserva tiene las siguientes restricciones:

@@ -1,5 +1,5 @@
 <?php
-class API{
+    class API{
 	private $connect = '';
 	function __construct()
 	{

@@ -178,7 +178,7 @@ $(document).ready(function(){
                 $('#comentarios').val(data.comentarios);
                 $('#action').val('update');
                 $('#button_action').val('Actualizar');
-                $('.modal-title').text('Editar Reserva');
+                $('.modal-title').text('Editar ReservaItem');
                 $('#apicrudModal').modal('show');
             }
         })
@@ -196,7 +196,7 @@ $(document).ready(function(){
                 success:function(data)
                 {
                     fetch_data();
-                    alert("Reserva eliminada");
+                    alert("ReservaItem eliminada");
                 }
             });
         }

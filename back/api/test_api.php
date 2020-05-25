@@ -1,5 +1,8 @@
 <?php
     include('api.php');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept' );
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
     $api_object = new API();
     if($_GET["action"] == 'fetch_all')
     {
