@@ -54,7 +54,7 @@
      this.detailId = id;
     },
     deleteItem(id) {
-      if(confirm("¿Estás seguro de que quieres eliminar esta reservaDetailContent?")) {
+      if(confirm("¿Estás seguro de que quieres eliminar esta reserva?")) {
           axios.post(process.env.VUE_APP_API_URL + `api/test_api.php?action=delete&id=${id}`).then(response => {
             console.log(response.data)
           })
