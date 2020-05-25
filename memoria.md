@@ -13,12 +13,12 @@ Lleva un poco más de trabajo pero gana mucho en usabilidad e interacción
 Se han conseguido los objetivos pedidos:
 * Listado de todas las **reservas futuras** , con acción en cada una para:
     * Ver detalle
-    * Modificar reserva
+    * Modificar reservaDetailContent
     * Eliminar ReservaItem
-* Botón de añadir reserva
+* Botón de añadir reservaDetailContent
 * Si hay reservas en las próximas 24 horas sale una nota encima de las reservas y podemos filtrar y ver esas reservas.
-* Crear o modifcar reserva tiene las siguientes restricciones:
-    * Que la reserva sea 24 horas más adelante de la fecha ºen la que se está haciendo
+* Crear o modifcar reservaDetailContent tiene las siguientes restricciones:
+    * Que la reservaDetailContent sea 24 horas más adelante de la fecha ºen la que se está haciendo
     * Que los comensales sean menos de 10
     * **Extra**: Además que los campos menos mensaje estén todos rellenos
 * Cada minuto se comprueba si hay nuevas reservas

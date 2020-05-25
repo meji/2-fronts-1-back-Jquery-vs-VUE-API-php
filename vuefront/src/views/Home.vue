@@ -1,7 +1,10 @@
 <template>
-  <main>
-    <h1>Bienvenido al restaurante de la UOC</h1>
-    <table>
+  <main class="container" :key="this.tablekey">
+    <h1 class="text-center">Bienvenidos al restaurante de la UOC</h1>
+    <p class="text-center">
+      <button class="notice24"></button>
+    </p>
+    <table class="table table-bordered table-striped" >
       <tr>
         <th>Nombre</th>
         <th>Apellidos</th>
@@ -12,9 +15,9 @@
         <th>Borrar</th>
         <th>Modificar</th>
       </tr>
-      <ReservaItem v-for="reserva in reservas" :key="reserva.id" :reserva="reserva" @showDetail="showDetail"/>
+      <ReservaItem v-for="reservaItem in reservas" :key="reservaItem.id + keysum" :reserva="reservaItem"  @showDetail="showDetail" @deleteItem="deleteItem"/>
     </table>
-    <ReservaDetail v-if="id" :id="this.id" :key="this.id"></ReservaDetail>
+    <ReservaDetail v-if="this.detailId" :id="this.detailId" :key="this.detailId + 2"></ReservaDetail>
   </main>
 </template>
 
@@ -29,26 +32,41 @@
   data () {
     return {
       reservas: null,
-      id:null,
-      loading: true,
-      errored: false,
+      detailId:null,
     }
   },
   mounted () {
-    axios(process.env.VUE_APP_API_URL+'actions/fetch.php')
-            .then(response => {
-              this.reservas = (response.data)
-              console.log(response.data)
-            })
-            .catch(error => {
-              console.log(error)
-              this.errored = true
-            })
-            .finally(() => this.loading = false)
+    this.fetchData()
   },
   methods:{
+    fetchData(){
+      axios(process.env.VUE_APP_API_URL+'actions/fetch.php')
+              .then(response => {
+                this.reservas = (response.data)
+                console.log(response.data)
+              })
+              .catch(error => {
+                console.log(error)
+              })
+              .finally(() => this.loading = false)
+    },
     showDetail(id){
-     this.id = id;
+     this.detailId = id;
+    },
+    deleteItem(id) {
+      if(confirm("¿Estás seguro de que quieres eliminar esta reservaDetailContent?")) {
+          axios.post(process.env.VUE_APP_API_URL + `api/test_api.php?action=delete&id=${id}`).then(response => {
+            console.log(response.data)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+          .finally(() =>{
+              alert("Reserva eliminada");
+              this.fetchData()
+            }
+          )
+      }
     }
   }
 };

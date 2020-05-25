@@ -1,5 +1,5 @@
 <template>
-    <tr>
+    <tr v-if="reserva.id">
         <td>{{reserva.nombre}}</td>
         <td>{{reserva.apellidos}}</td>
         <td>{{reserva.telefono}}</td>
@@ -7,13 +7,13 @@
         <td>{{reserva.comensales}}</td>
         <td>{{reserva.comentarios}}</td>
         <td>
-            <button type="button" name="edit" class="btn btn-warning btn-xs edit" :id="reserva.id">Modificar</button>
+            <button type="button" name="edit" class="btn btn-warning btn-xs edit">Modificar</button>
         </td>
         <td>
-            <button type="button" name="delete" class="btn btn-danger btn-xs delete" :id="reserva.id">Borrar</button>
+            <button type="button" name="delete" class="btn btn-danger btn-xs delete" @click="$emit('deleteItem', reserva.id)">Borrar</button>
         </td>
         <td>
-            <button type="button" name="ver" class="btn btn-xs btn-primary view" @click="$emit('showDetail' , reserva.id)" :id="reserva.id">Ver Detalle
+            <button type="button" name="ver" class="btn btn-xs btn-primary view" @click="$emit('showDetail' , reserva.id)">Ver Detalle
             </button>
         </td>
     </tr>
@@ -23,9 +23,6 @@
         name: 'ReservaItem',
         props: {
             reserva: {}
-        },
-        mounted (){
-            console.log('holi')
         }
     }
 </script>
