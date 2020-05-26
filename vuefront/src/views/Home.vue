@@ -1,5 +1,5 @@
 <template>
-  <main class="container" :key="this.tablekey">
+  <main class="container">
     <h1 class="text-center">Bienvenidos al restaurante de la UOC</h1>
     <p class="text-center">
       <button class="notice24"></button>
@@ -15,9 +15,9 @@
         <th>Borrar</th>
         <th>Modificar</th>
       </tr>
-      <ReservaItem v-for="reservaItem in reservas" :key="reservaItem.id + keysum" :reserva="reservaItem"  @showDetail="showDetail" @deleteItem="deleteItem"/>
+      <ReservaItem v-for="reservaItem in reservas" :key="reservaItem.id" :reserva="reservaItem"  @showDetail="showDetail" @deleteItem="deleteItem"/>
     </table>
-    <ReservaDetail v-if="this.detailId" :id="this.detailId" :key="this.detailId + 2"></ReservaDetail>
+    <ReservaDetail ref="modal" v-if="this.detailId" :id="this.detailId" :key="this.detailId + this.randomKey"></ReservaDetail>
   </main>
 </template>
 
@@ -33,6 +33,7 @@
     return {
       reservas: null,
       detailId:null,
+      randomKey: null
     }
   },
   mounted () {
@@ -43,7 +44,6 @@
       axios(process.env.VUE_APP_API_URL+'actions/fetch.php')
               .then(response => {
                 this.reservas = (response.data)
-                console.log(response.data)
               })
               .catch(error => {
                 console.log(error)
@@ -52,6 +52,7 @@
     },
     showDetail(id){
      this.detailId = id;
+     this.randomKey = Math.floor(Math.random()*1000)
     },
     deleteItem(id) {
       if(confirm("¿Estás seguro de que quieres eliminar esta reserva?")) {
