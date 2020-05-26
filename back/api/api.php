@@ -107,14 +107,14 @@
 			else
 			{
 				$data[] = array(
-					'success'	=>	'0'
+					'success'	=>	'2'
 				);
 			}
 		}
 		else
 		{
 			$data[] = array(
-				'success'	=>	'0'
+				'success'	=>	'3'
 			);
 		}
 		return $data;

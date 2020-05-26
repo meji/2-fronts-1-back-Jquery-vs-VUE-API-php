@@ -15,9 +15,11 @@
         <th>Borrar</th>
         <th>Modificar</th>
       </tr>
-      <ReservaItem v-for="reservaItem in reservas" :key="reservaItem.id" :reserva="reservaItem"  @showDetail="showDetail" @deleteItem="deleteItem"/>
+      <ReservaItem v-for="reservaItem in reservas" :key="reservaItem.id" :reserva="reservaItem"  @showDetail="showDetail" @deleteItem="deleteItem" @modifyItem="modifyItem"/>
     </table>
-    <ReservaDetail ref="modal" v-if="this.detailId" :id="this.detailId" :key="this.detailId + this.randomKey"></ReservaDetail>
+    <b-button id="new-book-btn" @click="this.newBooking">Nueva Reserva</b-button>
+    <ReservaDetail v-if="this.detailId" :id="this.detailId" :key="this.detailId + this.randomKey"></ReservaDetail>
+    <BookForm v-if="this.showForm" :key="this.randomFormKey" :modifyId="this.modifyId"></BookForm>
   </main>
 </template>
 
@@ -25,15 +27,20 @@
   import axios from "axios";
   import ReservaItem from "./ReservaItem";
   import ReservaDetail from "./ReservaDetail";
+  import BookForm from "./BookForm";
 
   export default {
   name: "Home",
-  components: {ReservaDetail, ReservaItem},
+  components: {BookForm, ReservaDetail, ReservaItem},
   data () {
     return {
       reservas: null,
       detailId:null,
-      randomKey: null
+      randomKey: null,
+      randomFormKey: null,
+      reservaEditable: null,
+      showForm: null,
+      modifyId: null
     }
   },
   mounted () {
@@ -68,6 +75,15 @@
             }
           )
       }
+    },
+    modifyItem(id) {
+      this.modifyId = id
+      this.showForm = true;
+      this.randomFormKey += 1
+    },
+    newBooking(){
+      this.showForm = true;
+      this.randomFormKey += 1
     }
   }
 };

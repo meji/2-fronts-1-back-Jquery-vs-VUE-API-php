@@ -7,7 +7,7 @@
         <td>{{reserva.comensales}}</td>
         <td>{{reserva.comentarios}}</td>
         <td>
-            <button type="button" name="edit" class="btn btn-warning btn-xs edit">Modificar</button>
+            <button type="button" name="edit" class="btn btn-warning btn-xs edit" @click="$emit('modifyItem', reserva.id)">Modificar</button>
         </td>
         <td>
             <button type="button" name="delete" class="btn btn-danger btn-xs delete" @click="$emit('deleteItem', reserva.id)">Borrar</button>

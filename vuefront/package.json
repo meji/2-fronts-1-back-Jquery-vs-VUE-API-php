@@ -11,6 +11,7 @@
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.4",
+    "querystring": "^0.2.0",
     "vue": "^2.6.11",
     "vue-axios-cors": "^1.0.1",
     "vue-flatpickr-component": "^8.1.5"
