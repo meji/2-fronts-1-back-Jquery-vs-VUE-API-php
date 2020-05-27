@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="formModal" hide-footer>
+    <b-modal id="formModal" @hide="resetForm" hide-footer>
         <template v-slot:modal-title>
             Rellenar reserva
         </template>
@@ -51,7 +51,7 @@
                 telefono: null,
                 fecha: null,
                 comensales: null,
-                comentarios: null,
+                comentarios: null
             }
         },
         methods:{
@@ -75,6 +75,15 @@
                         console.log(response))
                     .catch((err)=>
                         console.log(err)).finally(alert('reseva modificada'))
+                    .finally(()=>this.resetForm)
+            },
+            resetForm(){
+                this.nombre= null,
+                this.apellidos= null,
+                this.telefono= null,
+                this.fecha= null,
+                this.comensales= null,
+                this.comentarios= null
             }
         },
         mounted (){
@@ -92,8 +101,10 @@
                     .catch(error => {
                         console.log(error)
                     })
-                this.$bvModal.show('formModal')
+            }else{
+               this.resetForm()
             }
+            this.$bvModal.show('formModal')
         }
     }
 </script>

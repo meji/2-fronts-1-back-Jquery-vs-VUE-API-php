@@ -25,9 +25,9 @@
 
 <script>
   import axios from "axios";
-  import ReservaItem from "./ReservaItem";
-  import ReservaDetail from "./ReservaDetail";
-  import BookForm from "./BookForm";
+  import ReservaItem from "../components/ReservaItem";
+  import ReservaDetail from "../components/ReservaDetail";
+  import BookForm from "../components/BookForm";
 
   export default {
   name: "Home",
@@ -84,6 +84,7 @@
     newBooking(){
       this.showForm = true;
       this.randomFormKey += 1
+      this.modifyId = null;
     }
   }
 };
