@@ -54,8 +54,8 @@
               })
               .catch(error => {
                 console.log(error)
-              })
-              .finally(() => this.loading = false)
+              }).finally(()=>this.orderFuture())
+
     },
     showDetail(id){
      this.detailId = id;
@@ -85,6 +85,18 @@
       this.showForm = true;
       this.randomFormKey += 1
       this.modifyId = null;
+    },
+    orderFuture(){
+      this.reservas = this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime() + (24 * 3600000)))).sort(function(a,b){
+        const dateA=new Date(a.fecha), dateB=new Date(b.fecha)
+        return dateA-dateB //sort by date ascending
+      })
+    },
+    order24(){
+      this.reservas = this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24 * 3600000))))
+    },
+    filterByName(name){
+      this.reservas = this.reservas.filter(reserva => reserva.name===name)
     }
   }
 };

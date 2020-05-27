@@ -3,7 +3,7 @@
         <td>{{reserva.nombre}}</td>
         <td>{{reserva.apellidos}}</td>
         <td>{{reserva.telefono}}</td>
-        <!--        <td>${flatpickr.formatDate(new Date(item.fecha), "d-m-Y H:i")}</td>-->
+        <td>{{reserva.fecha}}</td>
         <td>{{reserva.comensales}}</td>
         <td>{{reserva.comentarios}}</td>
         <td>
