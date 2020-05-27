@@ -19,7 +19,7 @@
     </table>
     <b-button id="new-book-btn" @click="this.newBooking">Nueva Reserva</b-button>
     <ReservaDetail v-if="this.detailId" :id="this.detailId" :key="this.detailId + this.randomKey"></ReservaDetail>
-    <BookForm v-if="this.showForm" :key="this.randomFormKey" :modifyId="this.modifyId"></BookForm>
+    <BookForm v-if="this.showForm" :key="this.randomFormKey" :modifyId="this.modifyId" @fetchData="fetchData"></BookForm>
   </main>
 </template>
 

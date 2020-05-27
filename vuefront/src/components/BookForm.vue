@@ -74,8 +74,12 @@
                     .then(response =>
                         console.log(response))
                     .catch((err)=>
-                        console.log(err)).finally(alert('reseva modificada'))
-                    .finally(()=>this.resetForm)
+                        console.log(err))
+                    .finally(()=>{
+                        alert(this.modifyId ? 'Reseva modificada' : 'Reserva creada')
+                        this.resetForm();
+                        this.$emit('fetchData')
+                    })
             },
             resetForm(){
                 this.nombre= null,
@@ -83,7 +87,8 @@
                 this.telefono= null,
                 this.fecha= null,
                 this.comensales= null,
-                this.comentarios= null
+                this.comentarios= null,
+                this.$bvModal.hide('formModal')
             }
         },
         mounted (){
