@@ -5,15 +5,17 @@
       <b-tabs pills>
         <b-tab title="Ver todos" active="" @click="this.viewAll"></b-tab>
         <b-tab title="Filtrar las próximas 24h" v-if="this.next24Reservas" @click="this.order24"></b-tab>
-        <b-tab title="Filtrar por cualquier campo"><b-form-group
+        <b-tab title="Filtrar por cualquier campo" @click="this.viewAll" >
+          <div>
+            <b-form-group
                 label="Filtrar por lo que quieras"
                 label-cols-sm="3"
                 label-align-sm="right"
                 label-size="sm"
                 label-for="filterInput"
-                class="mb-0"
+                class="mt-3"
         >
-          <b-input-group size="sm">
+          <b-input-group size="md">
             <b-form-input
                     v-model="filter"
                     type="search"
@@ -24,8 +26,10 @@
               <b-button :disabled="!filter" @click="filter = ''">Limpiar</b-button>
             </b-input-group-append>
           </b-input-group>
-        </b-form-group></b-tab>
-        <b-tab title="Filtrar por fecha">
+        </b-form-group>
+          </div>
+        </b-tab>
+        <b-tab title="Filtrar por fecha" @click="this.viewAll" >
           <b-form-group>
             <label>Selecciona una fecha</label>
             <div class="input-group">
@@ -161,6 +165,7 @@
   },
   methods:{
     fetchData(){
+      this.filter = null;
       axios(process.env.VUE_APP_API_URL+'actions/fetch.php')
         .then(response => {
           this.reservas = (response.data)
