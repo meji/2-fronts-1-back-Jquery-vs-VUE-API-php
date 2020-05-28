@@ -73,8 +73,7 @@
                 fecha: null,
                 comensales: null,
                 comentarios: null,
-                date: new Date(),
-                config: {
+                config: { //configurador del datepicker
                     wrap: true,
                     locale: Spanish,
                     enableTime: true,
@@ -89,8 +88,8 @@
             }
         },
         methods:{
-            onSubmit(){
-                const requestBody = {
+            onSubmit(){ //Cuando validamos el form
+                const requestBody = { //Lo que va en la petición
                     nombre: this.nombre,
                     apellidos:this.apellidos,
                     telefono:this.telefono,
@@ -99,7 +98,6 @@
                     comentarios:this.comentarios,
                     id: this.modifyId
                 }
-                console.log(this.fecha, flatpickr.formatDate(flatpickr.parseDate(this.fecha), "Y-m-d H:i:S"))
                 axios.post(process.env.VUE_APP_API_URL + `api/test_api.php?action=${this.modifyId ? 'update' : 'insert'}`, qs.stringify(requestBody), {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -111,11 +109,11 @@
                         console.log(err))
                     .finally(()=>{
                         alert(this.modifyId ? 'Reseva modificada' : 'Reserva creada')
-                        this.resetForm();
-                        this.$emit('fetchData')
+                        this.resetForm(); //Limpiamos el form
+                        this.$emit('fetchData') //Recargamos el listado
                     })
             },
-            resetForm(){
+            resetForm(){ //Resetea el formulario
                 this.nombre= null,
                 this.apellidos= null,
                 this.telefono= null,
@@ -126,7 +124,7 @@
             }
         },
         mounted (){
-            if(this.modifyId){
+            if(this.modifyId){ // si hay una id para modificar una reserva, se muestran sus datos al cargar componente, traemos los datos de la bbdd
                 axios.post(process.env.VUE_APP_API_URL + `api/test_api.php?action=fetch_single&id=${this.modifyId}`)
                     .then(response => {
                         const reserva = ( response.data)
@@ -141,9 +139,9 @@
                         console.log(error)
                     })
             }else{
-               this.resetForm()
+               this.resetForm() //Sino reseteamos el form al cargar el componente
             }
-            this.$bvModal.show('formModal')
+            this.$bvModal.show('formModal') //mostramos el modal
         }
     }
 </script>
