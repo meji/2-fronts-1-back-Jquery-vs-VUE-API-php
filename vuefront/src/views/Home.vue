@@ -3,10 +3,9 @@
     <h1 class="text-center">Bienvenidos al restaurante de la UOC</h1>
     <b-card>
       <b-tabs pills>
-        <b-tab title="Ver todos" active="" @click="this.fetchData"></b-tab>
+        <b-tab title="Ver todos" active="" @click="this.viewAll"></b-tab>
         <b-tab title="Filtrar las próximas 24h" v-if="this.next24Reservas" @click="this.order24"></b-tab>
-        <b-tab title="Filtrar por nombre"></b-tab>
-        <b-form-group
+        <b-tab title="Filtrar por cualquier campo"><b-form-group
                 label="Filtrar por lo que quieras"
                 label-cols-sm="3"
                 label-align-sm="right"
@@ -25,7 +24,22 @@
               <b-button :disabled="!filter" @click="filter = ''">Limpiar</b-button>
             </b-input-group-append>
           </b-input-group>
-        </b-form-group>
+        </b-form-group></b-tab>
+        <b-tab title="Filtrar por fecha">
+          <b-form-group>
+            <label>Selecciona una fecha</label>
+            <div class="input-group">
+              <flat-pickr
+                      v-model="filterByDate"
+                      :config="config"
+                      class="form-control"
+                      placeholder="Seleccionar Fecha"
+                      name="filter">
+              </flat-pickr>
+              <b-button @click="this.fetchData">Filtrar</b-button>
+            </div>
+          </b-form-group>
+        </b-tab>
       </b-tabs>
     </b-card>
     <b-table striped hover
@@ -40,7 +54,9 @@
           Borrar
         </b-button>
       </template>
-
+      <template v-slot:cell(fecha)="row">
+        {{formatDate(row.item.fecha)}}
+      </template>
       <template v-slot:cell(modificar)="row">
         <b-button size="sm" @click="modifyItem(row.item.id)" variant="warning">
           Modificar
@@ -61,13 +77,16 @@
 
 <script>
   import axios from "axios";
-  // import ReservaItem from "../components/ReservaItem";
+  import flatPickr from 'vue-flatpickr-component';
+  import flatpickr from "flatpickr";
+  import 'flatpickr/dist/flatpickr.css';
   import ReservaDetail from "../components/ReservaDetail";
+  import {Spanish} from 'flatpickr/dist/l10n/es.js';
   import BookForm from "../components/BookForm";
 
   export default {
   name: "Home",
-  components: {BookForm, ReservaDetail},
+  components: {BookForm, ReservaDetail, flatPickr},
   data () {
     return {
       reservas: null,
@@ -79,6 +98,15 @@
       modifyId: null,
       next24Reservas: null,
       filter: null,
+      filterByDate:null,
+      date: new Date(),
+      config: {
+        wrap: true,
+        locale: Spanish,
+        minDate: new Date(),
+        time_24hr: true,
+        dateFormat: "d-m-Y"
+      },
       fields:[
         {
           key: 'nombre',
@@ -108,7 +136,7 @@
         {
           key: 'comentarios',
           sortable: true,
-          label: 'Comensales',
+          label: 'Comentarios',
         },
         {
           key: 'modificar',
@@ -143,8 +171,10 @@
           this.orderFuture();
           if (this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24 * 3600000))))) {
             this.next24Reservas = true;
-            console.log('Hay reservas')
           }
+        if(this.filterByDate) {
+          this.reservas = this.reservas.filter(reserva => flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'd-m-Y') === this.filterByDate)
+        }
         }
     )},
     showDetail(id){
@@ -185,13 +215,17 @@
     order24(){
       this.reservas = this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24*3600000))))
     },
-    filterByName(name){
-      this.reservas = this.reservas.filter(reserva => reserva.name===name)
-    }
+    viewAll(){
+      this.filter=null;
+      this.filterByDate= null;
+      this.fetchData();
+    },
+    formatDate(date){
+      return flatpickr.formatDate(new Date(date), "d-m-Y H:i")
+    },
   },
   computed: {
     sortOptions() {
-      // Create an options list from our fields
       return this.fields
         .filter(f => f.sortable)
         .map(f => {

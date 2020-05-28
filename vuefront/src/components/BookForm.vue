@@ -15,10 +15,26 @@
                 <input type="tel" v-model="telefono" name="telefono" id="telefono" class="form-control" placeholder="Teléfono"/>
             </div>
             <div class="form-group">
-                <div class='input-group date' id='datetimePicker'>
-                    <input type="text"  v-model="fecha" class="form-control" name="fecha" id="fecha" data-input>
-                    <div class="input-group-addon" data-toggle>
-                        <span class="glyphicon glyphicon-calendar"></span>
+                <label>Select a date</label>
+                <div class="input-group">
+                    <flat-pickr
+                            v-model="fecha"
+                            :config="config"
+                            class="form-control"
+                            placeholder="Seleccionar Fecha y Hora"
+                            name="date">
+                    </flat-pickr>
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="button" title="Toggle" data-toggle>
+                            <i class="fa fa-calendar">
+                                <span aria-hidden="true" class="sr-only">Toggle</span>
+                            </i>
+                        </button>
+                        <button class="btn btn-default" type="button" title="Clear" data-clear>
+                            <i class="fa fa-times">
+                                <span aria-hidden="true" class="sr-only">Clear</span>
+                            </i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -37,10 +53,15 @@
 
 <script>
     import axios from "axios";
+    import flatPickr from 'vue-flatpickr-component';
+    import flatpickr from "flatpickr";
+    import 'flatpickr/dist/flatpickr.css';
+    import {Spanish} from 'flatpickr/dist/l10n/es.js';
     const qs = require('querystring')
 
     export default {
         name: "BookForm",
+        components: {flatPickr},
         props: {
             modifyId:null
         },
@@ -51,7 +72,20 @@
                 telefono: null,
                 fecha: null,
                 comensales: null,
-                comentarios: null
+                comentarios: null,
+                date: new Date(),
+                config: {
+                    wrap: true,
+                    locale: Spanish,
+                    enableTime: true,
+                    minTime: "13:00",
+                    maxTime: "16:00",
+                    minDate: new Date().fp_incr(1),
+                    time_24hr: true,
+                    altInput: true,
+                    altFormat: "D d-m-Y H:i",
+                    dateFormat: "d-m-Y H:i"
+                },
             }
         },
         methods:{
@@ -60,12 +94,12 @@
                     nombre: this.nombre,
                     apellidos:this.apellidos,
                     telefono:this.telefono,
-                    fecha:this.fecha,
+                    fecha: flatpickr.formatDate(flatpickr.parseDate(this.fecha), "Y-m-d H:i:S"),
                     comensales:this.comensales,
                     comentarios:this.comentarios,
                     id: this.modifyId
                 }
-
+                console.log(this.fecha, flatpickr.formatDate(flatpickr.parseDate(this.fecha), "Y-m-d H:i:S"))
                 axios.post(process.env.VUE_APP_API_URL + `api/test_api.php?action=${this.modifyId ? 'update' : 'insert'}`, qs.stringify(requestBody), {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
