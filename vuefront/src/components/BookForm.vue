@@ -24,12 +24,12 @@
                             placeholder="Seleccionar Fecha y Hora"
                             name="date">
                     </flat-pickr>
+                    <div class="input-group-addon" data-toggle="">
+                        <b-button>
+                            <b-icon-calendar3/>
+                        </b-button>
+                    </div>
                     <div class="input-group-btn">
-                        <button class="btn btn-default" type="button" title="Toggle" data-toggle>
-                            <i class="fa fa-calendar">
-                                <span aria-hidden="true" class="sr-only">Toggle</span>
-                            </i>
-                        </button>
                         <button class="btn btn-default" type="button" title="Clear" data-clear>
                             <i class="fa fa-times">
                                 <span aria-hidden="true" class="sr-only">Clear</span>
@@ -56,12 +56,13 @@
     import flatPickr from 'vue-flatpickr-component';
     import flatpickr from "flatpickr";
     import 'flatpickr/dist/flatpickr.css';
+    import {BIconCalendar3} from 'bootstrap-vue'
     import {Spanish} from 'flatpickr/dist/l10n/es.js';
     const qs = require('querystring')
 
     export default {
         name: "BookForm",
-        components: {flatPickr},
+        components: {flatPickr, BIconCalendar3},
         props: {
             modifyId:null
         },

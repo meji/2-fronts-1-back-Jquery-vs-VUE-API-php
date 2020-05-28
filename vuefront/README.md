@@ -10,7 +10,8 @@ He hecho un componente padre home en views, y componentes hijos Form, y ReservaD
 Además de todo lo anterior de la otra práctica, de pintar tabla, crear reserva, ver 24h, eliminar reserva, o modificar,  se pide objetivos nuevos
 ## Objetivos nuevos cumplidos:
  * Filtrar por las próximas 24 h si hay reservas en esas 24h con filtro en VUE
- * Filtrar por nombre según escribes (De hecho este filtro vale para filtrar por lo que quieras, es una funcionalidad extra que he añadido)
- * Filtrar por fecha y por rango de fechas
+ * Filtrar por campo según escribes (De hecho este filtro vale para filtrar por lo que quieras, es una funcionalidad extra que he añadido)
+ * Filtrar por nombre y apellidos según escribes
+ * Filtrar por fecha: Filtra por un rango de fechas
  * Ordenación de columnas, si pulsas en cualquiera se puede ordenar
  * Ver detalle a través de Vue

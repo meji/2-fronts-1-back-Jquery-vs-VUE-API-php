@@ -21,7 +21,7 @@
                     v-model="filter"
                     type="search"
                     id="filterInput"
-                    placeholder="Busca lo que quieras"
+                    placeholder="Busca por cualquier campo"
             ></b-form-input>
             <b-input-group-append>
               <b-button :disabled="!filter" @click="filter = ''">Limpiar</b-button>
@@ -58,13 +58,21 @@
             <label>Selecciona una fecha</label>
             <div class="input-group">
               <flat-pickr
+                      :key="this.randomKey"
                       v-model="filterByDate"
                       :config="config"
                       class="form-control"
-                      placeholder="Seleccionar Fecha"
-                      name="filter">
+                      placeholder="Elige un rango de fechas"
+                      name="filter"
+                      mode="range"
+              >
               </flat-pickr>
-              <b-button @click="this.fetchData">Filtrar</b-button>
+              <div class="input-group-addon" data-toggle="">
+                <b-button>
+                  <b-icon-calendar3/>
+                </b-button>
+              </div>
+              <b-button @click="fetchData">Filtrar</b-button>
             </div>
           </b-form-group>
         </b-tab>
@@ -111,13 +119,14 @@
   import flatPickr from 'vue-flatpickr-component'; //Para el componente fecha hora
   import flatpickr from "flatpickr"; //Para los métodos parseData y formatData
   import {Spanish} from 'flatpickr/dist/l10n/es.js'; //Leguaje del date picker
+  import {BIconCalendar3} from 'bootstrap-vue'
   import 'flatpickr/dist/flatpickr.css'; // Css de date picker
   import ReservaDetail from "../components/ReservaDetail"; //Componente de Detalle de reserva
   import BookForm from "../components/BookForm"; //Componente de Formulario
 
   export default {
   name: "Home",
-  components: {BookForm, ReservaDetail, flatPickr},
+  components: {BookForm, ReservaDetail, flatPickr, BIconCalendar3},
   data () {
     return {
       reservas: null, //reservas
@@ -128,14 +137,14 @@
       modifyId: null, //Id de reserva a modificar
       next24Reservas: null, //para mostrar el boton de 24 h.
       filter: null, // v-model filter
-      filterByDate:null, //Para el filter by date,
+      filterByDate:null, //Para el filter by date, en el fetch si tiene valor tras el fetch filtra por las fechas elegidas
       queryString: null, // Paa buscar por Nombre y Apellidos solo
       config: {
         wrap: true,
         locale: Spanish,
-        minDate: new Date(),
-        time_24hr: true,
-        dateFormat: "d-m-Y"
+        minDate: 'today',
+        dateFormat: "d-m-Y",
+        mode:"range"
       },
       fields:[ //Configuramos la cabecera de la tabla para decir si son ordenables
         {
@@ -208,9 +217,11 @@
           if (this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24 * 3600000))))) {
             this.next24Reservas = true; //Activamos botón de 24 horas si hay reservas en 24h
           }
-        if(this.filterByDate) { //Mostramos filtrado por fecha si hemos filtrado por fecha
-          this.reservas = this.reservas.filter(reserva => flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'd-m-Y') === this.filterByDate)
-        }
+          if(this.filterByDate){
+            const filterByDateInit = this.filterByDate.split(' a ')[0]
+            const filterByDateEnd= this.filterByDate.split(' a ')[1]
+            this.reservas = this.reservas.filter(reserva => (flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'd-m-Y') >= filterByDateInit)&&(flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'd-m-Y') <= filterByDateEnd))
+          }
         }
     )},
     showDetail(id){ //Pasamos el id a detailId para mostrar el detalle y reseteamos el componente con un nuevo key
