@@ -84,7 +84,7 @@
                     time_24hr: true,
                     altInput: true,
                     altFormat: "D d-m-Y H:i",
-                    dateFormat: "d-m-Y H:i"
+                    dateFormat: "Y-m-d H:i:S"
                 },
             }
         },
@@ -132,7 +132,7 @@
                         this.nombre = reserva.nombre
                         this.apellidos = reserva.apellidos
                         this.telefono = reserva.telefono
-                        this.fecha = reserva.fecha
+                        this.fecha = flatpickr.formatDate(new Date(reserva.fecha), "Y-m-d H:i:S")
                         this.comensales = reserva.comensales
                         this.comentarios = reserva.comentarios
                     })
