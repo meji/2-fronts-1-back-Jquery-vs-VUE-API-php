@@ -154,7 +154,7 @@
         },
         {
           key: 'apellidos',
-          sortable: false,
+          sortable: true,
           label: 'Apellidos'
         },
         {
