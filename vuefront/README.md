@@ -1,4 +1,11 @@
 # Memoria
+## Memoria online
+Se puede consultar en http://meland.es/restaurante/vuefront/
+
+## Proyecto en git:
+https://github.com/meji/2-fronts-1-back-Jquery-vs-VUE-API-php.git
+
+## Extras
 He usado el mismo back que en la practica anterior, de hecho se puede acceder cambiando el directorio por fron en vez de vuefront al otro front, para ver que comparten back y base de datos
 
 He usado las siguientes librerías:
@@ -9,6 +16,7 @@ He usado las siguientes librerías:
 He hecho un componente padre home en views, y componentes hijos Form, y ReservaDetail, para los modales del Form y del Detalle
 Además de todo lo anterior de la otra práctica, de pintar tabla, crear reserva, ver 24h, eliminar reserva, o modificar,  se pide objetivos nuevos
 ## Objetivos nuevos cumplidos:
+ * Los objetivos de la práctica anterior, además:
  * Filtrar por las próximas 24 h si hay reservas en esas 24h con filtro en VUE
  * Filtrar por campo según escribes (De hecho este filtro vale para filtrar por lo que quieras, es una funcionalidad extra que he añadido)
  * Filtrar por nombre y apellidos según escribes

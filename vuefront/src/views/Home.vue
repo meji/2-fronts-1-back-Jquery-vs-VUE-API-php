@@ -143,7 +143,9 @@
         wrap: true,
         locale: Spanish,
         minDate: 'today',
-        dateFormat: "d-m-Y",
+        dateFormat: "Y-m-d",
+        altInput:true,
+        altFormat: "d-m-Y",
         mode:"range"
       },
       fields:[ //Configuramos la cabecera de la tabla para decir si son ordenables
@@ -221,7 +223,9 @@
           if(this.filterByDate){
             const filterByDateInit = this.filterByDate.split(' a ')[0]
             const filterByDateEnd= this.filterByDate.split(' a ')[1]
-            this.reservas = this.reservas.filter(reserva => (flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'd-m-Y') >= filterByDateInit)&&(flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'd-m-Y') <= filterByDateEnd))
+            console.log('init',filterByDateInit)
+            console.log('end',filterByDateEnd)
+            this.reservas = this.reservas.filter(reserva => (flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'Y-m-d') >= filterByDateInit)&&(flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'Y-m-d') <= filterByDateEnd))
           }
         }
     )},
