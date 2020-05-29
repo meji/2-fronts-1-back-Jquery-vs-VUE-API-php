@@ -94,7 +94,7 @@
                     nombre: this.nombre,
                     apellidos:this.apellidos,
                     telefono:this.telefono,
-                    fecha: flatpickr.formatDate(flatpickr.parseDate(this.fecha), "Y-m-d H:i:S"),
+                    fecha: flatpickr.formatDate(flatpickr.parseDate(this.fecha, 'Y-m-d H:i:S'), "Y-m-d H:i:S"),
                     comensales:this.comensales,
                     comentarios:this.comentarios,
                     id: this.modifyId
