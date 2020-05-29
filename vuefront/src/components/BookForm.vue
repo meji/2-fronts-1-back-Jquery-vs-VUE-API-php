@@ -23,6 +23,7 @@
                             class="form-control"
                             placeholder="Seleccionar Fecha y Hora"
                             name="date"
+                            @blur="dateError=null"
                     >
                     </flat-pickr>
                     <div class="input-group-addon" data-toggle="">
