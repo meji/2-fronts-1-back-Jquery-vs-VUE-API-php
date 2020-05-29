@@ -106,7 +106,7 @@
       </template>
     </b-table>
     <!-- Boton nueva reserva-->
-    <b-button id="new-book-btn" @click="this.newBooking">Nueva Reserva</b-button>
+    <b-button id="new-book-btn" variant="success" @click="this.newBooking">Nueva Reserva</b-button>
     <!-- Componente de detalle en modal-->
     <ReservaDetail v-if="this.detailId" :id="this.detailId" :key="this.detailId + this.randomKey"></ReservaDetail>
     <!-- Componente de form en modal-->
@@ -214,7 +214,8 @@
           console.log(error)
         }).finally(()=> {
           this.orderFuture(); //Ordenamos solo de hoy en adelante
-          if (this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24 * 3600000))))) {
+          if ((this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24*3600000))))).length>0) {
+            this.next24Reservas = true; //Activamos botón de 24 horas si hay reservas en 24h
             this.next24Reservas = true; //Activamos botón de 24 horas si hay reservas en 24h
           }
           if(this.filterByDate){
@@ -271,7 +272,6 @@
       return flatpickr.formatDate(new Date(date), "d-m-Y H:i")
     },
     filterByNameSecondName(e){
-      console.log(e.key)
       if (e.key === "Delete" || e.key === "Backspace"){ //Si borramos texto vuelve a cargar los datos
         this.fetchData()
       }else{

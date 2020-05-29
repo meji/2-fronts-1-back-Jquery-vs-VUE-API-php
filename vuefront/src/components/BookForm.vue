@@ -6,23 +6,24 @@
         <form method="post" id="res_form" @submit.prevent="onSubmit">
             <p class="help-block">La fecha y la hora de reserva ha de ser 24h posterior a la fecha y hora actual</p>
             <div class="form-group">
-                <input v-model="nombre"  type="text" name="nombre" id="nombre" class="form-control" placeholder ="nombre"/>
+                <input v-model="nombre"  type="text" name="nombre" id="nombre" class="form-control" placeholder ="nombre" required/>
             </div>
             <div class="form-group">
-                <input v-model="apellidos" type="text" name="apellidos" id="apellidos" class="form-control"  placeholder ="apellidos"/>
+                <input v-model="apellidos" type="text" name="apellidos" id="apellidos" class="form-control"  placeholder ="apellidos" required/>
             </div>
             <div class="form-group">
-                <input type="tel" v-model="telefono" name="telefono" id="telefono" class="form-control" placeholder="Teléfono"/>
+                <input type="tel" v-model="telefono" name="telefono" id="telefono" pattern='^((\\+34[\\s])|(\\(\\+34\\)|\\+34|0034[\\s]?))?[9|8|7|6][0-9]{2}([0-9]{6}|([\\s][0-9]{3}){2}|([\\s][0-9]{2}){3})$' class="form-control" placeholder="Teléfono" required/>
             </div>
             <div class="form-group">
                 <label>Select a date</label>
-                <div class="input-group">
+                <div :class="[{'has-error':this.dateError},'input-group']">
                     <flat-pickr
                             v-model="fecha"
                             :config="config"
                             class="form-control"
                             placeholder="Seleccionar Fecha y Hora"
-                            name="date">
+                            name="date"
+                    >
                     </flat-pickr>
                     <div class="input-group-addon" data-toggle="">
                         <b-button>
@@ -37,9 +38,10 @@
                         </button>
                     </div>
                 </div>
+                <p class="notice" v-if="this.dateError">La fecha y la hora ha de ser 24 horas posterior a la fecha y hora actual</p>
             </div>
             <div class="form-group">
-                <input type="number" v-model="comensales" name="comensales" id="comensales" class="form-control" placeholder="Comensales" max="10"/>
+                <input type="number" v-model="comensales" name="comensales" id="comensales" class="form-control" placeholder="Comensales" max="10" min="1" required/>
                 <span class="notice"></span>
             </div>
             <div class="form-group">
@@ -74,12 +76,13 @@
                 fecha: null,
                 comensales: null,
                 comentarios: null,
+                dateError: null,//Para mensaje error fecha y validar el form
                 config: { //configurador del datepicker
                     wrap: true,
                     locale: Spanish,
                     enableTime: true,
                     minTime: "13:00",
-                    maxTime: "16:00",
+                    maxTime: "23:30",
                     minDate: new Date().fp_incr(1),
                     time_24hr: true,
                     altInput: true,
@@ -89,30 +92,35 @@
             }
         },
         methods:{
-            onSubmit(){ //Cuando validamos el form
-                const requestBody = { //Lo que va en la petición
-                    nombre: this.nombre,
-                    apellidos:this.apellidos,
-                    telefono:this.telefono,
-                    fecha: flatpickr.formatDate(flatpickr.parseDate(this.fecha, 'Y-m-d H:i:S'), "Y-m-d H:i:S"),
-                    comensales:this.comensales,
-                    comentarios:this.comentarios,
-                    id: this.modifyId
-                }
-                axios.post(process.env.VUE_APP_API_URL + `api/test_api.php?action=${this.modifyId ? 'update' : 'insert'}`, qs.stringify(requestBody), {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+            onSubmit(){
+                //Validamos la fecha, el resto se valida con el propio html del form
+                if(this.validateDate()){
+                    this.dateError= true;
+                }else {
+                    //Cuando validamos el form
+                    const requestBody = { //Lo que va en la petición
+                        nombre: this.nombre,
+                        apellidos: this.apellidos,
+                        telefono: this.telefono,
+                        fecha: flatpickr.formatDate(flatpickr.parseDate(this.fecha, 'Y-m-d H:i:S'), "Y-m-d H:i:S"),
+                        comensales: this.comensales,
+                        comentarios: this.comentarios,
+                        id: this.modifyId
                     }
-                })
-                    .then(response =>
-                        console.log(response))
-                    .catch((err)=>
-                        console.log(err))
-                    .finally(()=>{
-                        alert(this.modifyId ? 'Reseva modificada' : 'Reserva creada')
-                        this.resetForm(); //Limpiamos el form
-                        this.$emit('fetchData') //Recargamos el listado
+                    axios.post(process.env.VUE_APP_API_URL + `api/test_api.php?action=${this.modifyId ? 'update' : 'insert'}`, qs.stringify(requestBody), {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
                     })
+                        .then()
+                        .catch((err) =>
+                            console.log(err))
+                        .finally(() => {
+                            alert(this.modifyId ? 'Reseva modificada' : 'Reserva creada')
+                            this.resetForm(); //Limpiamos el form
+                            this.$emit('fetchData') //Recargamos el listado
+                        })
+                }
             },
             resetForm(){ //Resetea el formulario
                 this.nombre= null,
@@ -122,6 +130,11 @@
                 this.comensales= null,
                 this.comentarios= null,
                 this.$bvModal.hide('formModal')
+            },
+            validateDate(){
+                if(Math.round(new Date(this.fecha)) <= (Math.round((new Date().getTime()) + (24 * 3600000)))){
+                    return true
+                }return false
             }
         },
         mounted (){
@@ -147,6 +160,7 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    .notice{color: #ff0000; font-size: 0.8rem; }
+    .has-error input, .has-error .form-control{border-color: red}
 </style>
