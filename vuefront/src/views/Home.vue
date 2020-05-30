@@ -6,7 +6,11 @@
       <b-tabs pills>
         <b-tab title="Ver todos" active="" @click="this.viewAll"></b-tab>
         <b-tab title="Filtrar las próximas 24h" v-if="this.next24Reservas" @click="this.order24"></b-tab>
-        <b-tab title="Filtrar por cualquier campo" @click="this.viewAll" >
+      </b-tabs>
+    </b-card>
+    <b-card>
+      <b-tabs pills>
+        <b-tab title="Filtrar por cualquier campo" @click="this.resetFilters" >
           <div>
             <b-form-group
                 label="Filtrar por lo que quieras"
@@ -30,7 +34,7 @@
         </b-form-group>
           </div>
         </b-tab>
-        <b-tab title="Filtrar por nombre y apellidos solo">
+        <b-tab title="Filtrar por nombre y apellidos solo" @click="this.resetFilters">
           <b-form-group
                   label="Filtrar por nombre y apellidos"
                   label-cols-sm="3"
@@ -53,7 +57,7 @@
             </b-input-group>
           </b-form-group>
         </b-tab>
-        <b-tab title="Filtrar por fecha" @click="this.viewAll" >
+        <b-tab title="Filtrar por fecha" @click="this.resetFilters" >
           <b-form-group>
             <label>Selecciona una fecha</label>
             <div class="input-group">
@@ -139,6 +143,7 @@
       filter: null, // v-model filter
       filterByDate:null, //Para el filter by date, en el fetch si tiene valor tras el fetch filtra por las fechas elegidas
       queryString: null, // Paa buscar por Nombre y Apellidos solo
+      nextReservas24On: null,
       config: {
         wrap: true,
         locale: Spanish,
@@ -216,6 +221,10 @@
           console.log(error)
         }).finally(()=> {
           this.orderFuture(); //Ordenamos solo de hoy en adelante
+          if(this.nextReservas24On){
+            console.log("Está ordenado")
+            this.order24();
+          }
           if ((this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24*3600000))))).length>0) {
             this.next24Reservas = true; //Activamos botón de 24 horas si hay reservas en 24h
             this.next24Reservas = true; //Activamos botón de 24 horas si hay reservas en 24h
@@ -223,8 +232,6 @@
           if(this.filterByDate){
             const filterByDateInit = this.filterByDate.split(' a ')[0]
             const filterByDateEnd= this.filterByDate.split(' a ')[1]
-            console.log('init',filterByDateInit)
-            console.log('end',filterByDateEnd)
             this.reservas = this.reservas.filter(reserva => (flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'Y-m-d') >= filterByDateInit)&&(flatpickr.formatDate(flatpickr.parseDate(reserva.fecha), 'Y-m-d') <= filterByDateEnd))
           }
         }
@@ -265,10 +272,15 @@
       })
     },
     order24(){ //Filtramos las reservas en 24h.
+      this.nextReservas24On = true
       this.reservas = this.reservas.filter(reserva => (Math.round(new Date(reserva.fecha).getTime()) >= Math.round(new Date().getTime()) && Math.round(new Date(reserva.fecha).getTime()) <= Math.round(new Date().getTime() + (24*3600000))))
     },
-    viewAll(){ //Para resetear toda la table
-      this.filter=null;
+    viewAll(){ //Para resetear toda la table y Ver todos
+      this.nextReservas24On = false;
+      this.filterByDate= null;
+      this.fetchData();
+    },
+    resetFilters(){ //reseteo filtros de fechas
       this.filterByDate= null;
       this.fetchData();
     },
