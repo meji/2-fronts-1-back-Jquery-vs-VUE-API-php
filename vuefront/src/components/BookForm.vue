@@ -5,14 +5,17 @@
         </template>
         <form method="post" id="res_form" @submit.prevent="onSubmit">
             <p class="help-block">La fecha y la hora de reserva ha de ser 24h posterior a la fecha y hora actual</p>
-            <div class="form-group">
+            <div :class="[{'has-error':((this.nombre)&&(this.nombre.length<4))},'form-group']">
                 <input v-model="nombre"  type="text" name="nombre" id="nombre" class="form-control" placeholder ="nombre" required/>
+                <span class="notice" v-if="((this.nombre)&&(this.nombre.length<4))">Nombre tiene que tener más de 3 caracteres</span>
             </div>
-            <div class="form-group">
+            <div :class="[{'has-error':((this.apellidos)&&(this.apellidos.length<4))},'form-group']">
                 <input v-model="apellidos" type="text" name="apellidos" id="apellidos" class="form-control"  placeholder ="apellidos" required/>
+                <span class="notice" v-if="((this.apellidos)&&(this.apellidos.length<4))">Apellidos tiene que tener más de 3 caracteres</span>
             </div>
-            <div class="form-group">
+            <div  :class="[{'has-error':((this.telefono)&&(this.telefono.length<9))},'form-group']">
                 <input type="tel" v-model="telefono" name="telefono" id="telefono" pattern='^((\\+34[\\s])|(\\(\\+34\\)|\\+34|0034[\\s]?))?[9|8|7|6][0-9]{2}([0-9]{6}|([\\s][0-9]{3}){2}|([\\s][0-9]{2}){3})$' class="form-control" placeholder="Teléfono" required/>
+                <span class="notice" v-if="((this.telefono)&&(this.telefono.length<9))">Teléfono tiene que tener al menos 9 números</span>
             </div>
             <div class="form-group">
                 <label>Select a date</label>
@@ -23,7 +26,7 @@
                             class="form-control"
                             placeholder="Seleccionar Fecha y Hora"
                             name="date"
-                            @blur="dateError=null"
+                            @input="validateDate"
                     >
                     </flat-pickr>
                     <div class="input-group-addon" data-toggle="">
@@ -41,9 +44,9 @@
                 </div>
                 <p class="notice" v-if="this.dateError">La fecha y la hora ha de ser 24 horas posterior a la fecha y hora actual</p>
             </div>
-            <div class="form-group">
+            <div :class="[{'has-error':((this.comensales)&&(this.comensales>10|| this.comensales<1))},'form-group']">
                 <input type="number" v-model="comensales" name="comensales" id="comensales" class="form-control" placeholder="Comensales" max="10" min="1" required/>
-                <span class="notice"></span>
+                <span class="notice" v-if="((this.comensales)&&(this.comensales>10|| this.comensales<1))">Los comensales tienen que ser un número entre 1 y 10</span>
             </div>
             <div class="form-group">
                 <textarea id="comentarios" v-model="comentarios" class="form-control" name="comentarios" placeholder="mensaje"></textarea>
@@ -95,8 +98,8 @@
         methods:{
             onSubmit(){
                 //Validamos la fecha, el resto se valida con el propio html del form
-                if(this.validateDate()){
-                    this.dateError= true;
+                if(this.dateError || (this.nombre)&&(this.nombre.length<4) || (this.apellidos)&&(this.apellidos.length<4) || (this.telefono)&&(this.telefono.length<9) || (this.comensales)&&(this.comensales.length>10)){
+                   return false
                 }else {
                     //Cuando validamos el form
                     const requestBody = { //Lo que va en la petición
@@ -134,8 +137,8 @@
             },
             validateDate(){
                 if(Math.round(new Date(this.fecha)) <= (Math.round((new Date().getTime()) + (24 * 3600000)))){
-                    return true
-                }return false
+                    return this.dateError=true
+                }return this.dateError=false
             }
         },
         mounted (){

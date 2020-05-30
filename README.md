@@ -48,5 +48,5 @@ Además de todo lo anterior de la otra práctica, de pintar tabla, crear reserva
 * Modificaremos las validaciones de los campos (1 punto)
 * Modificaremos la carga de los datos y construcción de la tabla 24h. (1 punto)
 * Incluir un campo para filtrar la tabla por nombre y apellidos. (1 punto)
-* Incluir selectores para filtrar por fecha (1 punto)
+* Incluir selectores para filtrar por fecha (1 punto) (aunque esta petición no tiene ningún sentido se ha hecho)
 * Ordenación de las columnas (1 punto)

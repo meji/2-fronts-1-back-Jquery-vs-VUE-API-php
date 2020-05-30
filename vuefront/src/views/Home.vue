@@ -12,37 +12,23 @@
       <b-tabs pills>
         <b-tab title="Filtrar por cualquier campo" @click="this.resetFilters" >
           <div>
-            <b-form-group
-                label="Filtrar por lo que quieras"
-                label-cols-sm="3"
-                label-align-sm="right"
-                label-size="sm"
-                label-for="filterInput"
-                class="mt-3"
-        >
-          <b-input-group size="md">
-            <b-form-input
-                    v-model="filter"
-                    type="search"
-                    id="filterInput"
-                    placeholder="Busca por cualquier campo"
-            ></b-form-input>
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''">Limpiar</b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
+            <b-form-group class="mt-3" >
+              <b-input-group size="md">
+                <b-form-input
+                        v-model="filter"
+                        type="search"
+                        id="filterInput"
+                        placeholder="Busca por cualquier campo"
+                ></b-form-input>
+                <b-input-group-append>
+                  <b-button :disabled="!filter" @click="filter = ''">Limpiar</b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
           </div>
         </b-tab>
         <b-tab title="Filtrar por nombre y apellidos solo" @click="this.resetFilters">
-          <b-form-group
-                  label="Filtrar por nombre y apellidos"
-                  label-cols-sm="3"
-                  label-align-sm="right"
-                  label-size="sm"
-                  label-for="filterInput"
-                  class="mt-3"
-          >
+          <b-form-group class="mt-3">
             <b-input-group size="md">
               <b-form-input
                       v-model.lazy="queryString"
@@ -59,8 +45,7 @@
         </b-tab>
         <b-tab title="Filtrar por fecha" @click="this.resetFilters" >
           <b-form-group>
-            <label>Selecciona una fecha</label>
-            <div class="input-group">
+            <div class="input-group mt-3">
               <flat-pickr
                       :key="this.randomKey"
                       v-model="filterByDate"
@@ -69,6 +54,7 @@
                       placeholder="Elige un rango de fechas"
                       name="filter"
                       mode="range"
+                      @input="fetchData"
               >
               </flat-pickr>
               <div class="input-group-addon" data-toggle="">
@@ -76,7 +62,6 @@
                   <b-icon-calendar3/>
                 </b-button>
               </div>
-              <b-button @click="fetchData">Filtrar</b-button>
             </div>
           </b-form-group>
         </b-tab>
