@@ -189,6 +189,10 @@
   },
   mounted () {
     this.fetchData() //cargamos los datos
+    const self = this; // Para acceder desde setInterval en vez de this
+    setInterval(function(){ //Comprobamos cada minuto si hay reservas nuevas y si hay cada 24h.
+      self.fetchData()
+    }, 60000)
   },
     watch:{
       queryString : function(val){

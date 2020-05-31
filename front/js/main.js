@@ -224,7 +224,7 @@ $(document).ready(function(){
         })
     });
     //Comprobamos cada minutos que no hay nuevas reservas y también al hacerse el fetch si hay en las próximas 24h.
-    setTimeout(function(){
+    setInterval(function(){
         fetch_data();
     }, 60000);
 });
